@@ -11,6 +11,7 @@ import { hp, wp } from "../helpers/common";
 //import Input from '../components/Input'
 import Button from '../components/Button'
 import Input from '../components/Input'
+import { supabase } from '../lib/supabase'
 
 
 const login = () => {
@@ -23,6 +24,19 @@ const login = () => {
         if(!emailRef.current || !passwordRef.current){
             Alert.alert('Iniciar sesion', 'Porfavor complete todos los campos');
             return;
+        }
+        let email = emailRef.current.trim();
+        let password = passwordRef.current.trim();
+        setLoading(true);
+        const {error} = await supabase.auth.signInWithPassword({
+            email, 
+            password
+        });
+
+        console.log('error: ', error);
+        if(error){
+            Alert.alert('Error al iniciar sesion', error.message);
+            
         }
 
     }
